@@ -1,0 +1,44 @@
+{{extend "./common/layout.art"}}
+
+{{block "link"}}
+	<link href="/home/css/index.css" rel="stylesheet">
+{{/block}}
+
+{{block "main"}}
+	{{include "./common/header.art"}}
+	<!-- 文章列表开始 -->
+	<ul class="list w1100">
+		{{each ret.records}}
+		<li class="{{$index % 2 == 0 ? 'fl' : 'fr'}}">
+			<a href="/home/article?id={{@$value._id}}" class="thumbnail">
+				<img src="{{$value.cover}}">
+			</a>
+			<div class="content">
+				<a class="article-title" href="/home/article?id={{@$value._id}}">{{$value.title}}</a>
+				<div class="article-info">
+					<span class="author">{{$value.author.username}}</span>
+					<span>{{dateformat($value.publishDate,"yyyy-mm--dd")}}</span>
+				</div>
+				<div class="brief">
+					{{@$value.content.replace(/<[^>]+>/g,"").substr(0, 150) + "..."}}
+				</div>
+			</div>
+		</li>
+		{{/each}}
+	</ul>
+	<!-- 文章列表结束 -->
+
+	<!-- 分页开始 -->
+	<div class="page w1100">
+		{{if ret.page>1}}
+		<a href="/home/?page={{ret.page-1}}">上一页</a>
+		{{/if}}
+		{{each ret.display}}
+		<a href="/home/?page={{$value}}" class="{{ret.page == $value ? 'active' : ''}}">{{$value}}</a>
+		{{/each}}
+		{{if ret.page<ret.pages}}
+		<a href="/home/?page={{ret.page-0+1}}">下一页</a>
+		{{/if}}
+	</div>
+	<!-- 分页结束 -->
+{{/block}}
